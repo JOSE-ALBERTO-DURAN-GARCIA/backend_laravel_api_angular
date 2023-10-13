@@ -1,0 +1,21 @@
+###     la primera letra en mayuscula al crear los modelos
+lo que hace es crear los modelos y las migraciones
+
+php artisan make:model Persona -m
+
+php artisan make:model Categoria -m
+php artisan make:model Producto -m 
+php artisan make:model Cliente -m 
+php artisan make:model Pedido -m 
+
+### este ultimo comando solo creara migracion no modelo
+
+php artisan make:migration create_pedido_producto_table
+
+--------------------------------
+
+php artisan make:controller PersonaController --api
+php artisan make:controller CategoriaController --api
+php artisan make:controller ProductoController --api
+php artisan make:controller ClienteController --api
+php artisan make:controller PedidoController --api
