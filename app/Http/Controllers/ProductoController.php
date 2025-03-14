@@ -17,11 +17,11 @@ class ProductoController extends Controller
         $limit = isset($request->limit)?$request->limit:10;
 
         if($q){
-            $productos = Producto::where("nombre", "like", "%$q%")
+            $productos = Producto::with('categoria')->where("nombre", "like", "%$q%")
                                     ->orderBy("id", "desc")
                                     ->paginate($limit);
         }else{
-            $productos = Producto::orderBy("id", "desc")->paginate($limit);
+            $productos = Producto::with('categoria')->orderBy("id", "desc")->paginate($limit);
         }
         return response()->json($productos, 200);
     }
@@ -31,7 +31,21 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // validacion
+        $request->validate([
+            "nombre" => "required",
+            "categoria_id" => "required"
+        ]);
+        //guardar
+        $producto = new Producto();
+        $producto->nombre = $request->nombre;
+        $producto->precio = $request->precio;
+        $producto->stock = $request->stock;
+        $producto->descripcion = $request->descripcion;
+        $producto->categoria_id = $request->categoria_id;
+        $producto->save();
+
+        return response()->json(["message"=> "producto Registrado"], 201);
     }
 
     /**
@@ -56,5 +70,21 @@ class ProductoController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function actualizarImagen(Request $request, $id){
+        if($file = $request->file("imagen")){
+            $direccion_imagen = time(). "-" . $file->getClientOriginalName();
+            $file->move("imagenes/", $direccion_imagen);
+
+            $direccion_imagen = "imagenes/". $direccion_imagen;
+
+            $producto = Producto::find($id);
+            $producto->imagen = $direccion_imagen;
+            $producto->update();
+
+            return response()->json(["mensaje" => "Imagen Actualizada"], 201);
+        }
+        return response()->json(["mensaje" => "Se requiere Imagen"], 422);
     }
 }

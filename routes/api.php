@@ -28,6 +28,11 @@ Route::post("/logout", [AuthController::class, "funSalir"]);
 
 });
 Route::middleware('auth:sanctum')->group(function(){
+
+
+    Route::post("producto/{id}/actualizar-imagen", [ProductoController::class, "actualizarImagen"]);
+
+    Route::get("cliente/buscar", [ClienteController::class, "buscarCliente"]);
          //usuario
     Route::apiResource("usuario", UsuarioController::class);
     Route::apiResource("persona", PersonaController::class);
